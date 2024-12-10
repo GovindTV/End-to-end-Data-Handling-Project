@@ -1,0 +1,22 @@
+Thought process:
+This is the first document which is similar to PRD which I create before any task is picked up.
+It defines the requirements and steps so that everyone can be on the same page and work can continue at flow state.
+
+Steps needed to be done:
+ • Extract the data from a source file.
+ • Load them up into MySQL using python.
+ • Data cleaning and visualization using pandas & matplotlib.
+ • Run SQL queries for better understanding of data.
+ • Include an AI integration.
+ • Upload them to a website using Streamlit.
+
+Exact steps:
+1. Identify the dataset to Extract.
+2. Figure out how to load the dataset to SQL.
+3. Figure out how to run AI locally & using python.
+4. Clean the data to make it readable and include more information than what is provided.
+5. Upload the data to sql to run queries for better understanding of the data.
+6. Use a ML model to run prediction (not the high priority for this project).
+7. Use an AI model/API to generate opinion on the data.
+    7.1 Better would be to use this layer to make changes to the data that gives it more information that would be useful in the data pipeline.
+8. Upload it to streamlit.

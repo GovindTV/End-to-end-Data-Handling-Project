@@ -1,0 +1,8 @@
+pandas
+yfinance
+sqlalchemy
+streamlit
+ollama
+matplotlib
+sqlalchemy
+pymysql
