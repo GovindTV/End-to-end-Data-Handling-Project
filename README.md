@@ -1,7 +1,3 @@
-Here’s a draft for your README file:
-
----
-
 # **End-to-End Stock Data Handling and Prediction Project**  
 
 ## **Overview**  
@@ -28,7 +24,7 @@ Key features include:
 - **Data Retrieval**: [yfinance](https://pypi.org/project/yfinance/)  
 - **Database**: [MySQL](https://www.mysql.com/)  
 - **Machine Learning**: [XGBoost](https://xgboost.readthedocs.io/)  
-- **Natural Language Processing**: Large Language Model (LLM) integration  
+- **Natural Language Processing**: [Ollama](https://ollama.com/)
 
 ---
 
@@ -95,8 +91,8 @@ streamlit run 2.streamlit_app.py
 
 ## **Contact**  
 For any questions or feedback, feel free to reach out:  
-- **LinkedIn**: [Your LinkedIn Profile](https://linkedin.com/in/govindtv)  
-- **GitHub**: [Your GitHub Profile](https://github.com/GovindTV)  
+[**LinkedIn**](https://linkedin.com/in/govindtv)  
+[**GitHub**](https://github.com/GovindTV)  
 
 ---
 
