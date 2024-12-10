@@ -24,7 +24,7 @@ Key features include:
 - **Data Retrieval**: [yfinance](https://pypi.org/project/yfinance/)  
 - **Database**: [MySQL](https://www.mysql.com/)  
 - **Machine Learning**: [XGBoost](https://xgboost.readthedocs.io/)  
-- **Natural Language Processing**: [Ollama](https://ollama.com/)
+- **Natural Language Processing**: [Ollama](https://ollama.com/) -> [llama3.2 1B model](https://ai.meta.com/blog/meta-llama-3-1/)
 
 ---
 
@@ -67,7 +67,7 @@ pip install -r requirements.txt
 
 ### **4. Set Up MySQL Database**  
 1. Create a new MySQL database.  
-2. Update the database credentials in `config.py` or `.env`.  
+2. ~~Update the database credentials in `config.py` or `.env`.~~ Creds currently within script, will update to separate file approach.
 3. Initialize the database schema:  
    ```bash  
    python 1.setup.py  
@@ -83,11 +83,11 @@ streamlit run 2.streamlit_app.py
 
 
 ## **Future Enhancements**  
+- More SQL queries
 - Store db creds safely in .env file and update the script to use it. 
-- Integration with additional data sources.  
-- Deployment of the application on a cloud platform (e.g., AWS, Azure, GCP).
-- Dockerization for easier sharing.
 - Use AI as a data transformation layer.
+- Dockerization for easier sharing.
+- Deployment of the application on a cloud platform (e.g., AWS, Azure, GCP).
 
 ## **Contact**  
 For any questions or feedback, feel free to reach out:  
