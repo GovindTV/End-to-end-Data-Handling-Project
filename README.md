@@ -70,7 +70,7 @@ pip install -r requirements.txt
 2. Update the database credentials in `config.py` or `.env`.  
 3. Initialize the database schema:  
    ```bash  
-   python initialize_database.py  
+   python 1.setup.py  
    ```  
 
 ### **5. Run the Application**  
