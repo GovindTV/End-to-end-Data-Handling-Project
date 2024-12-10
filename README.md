@@ -1,7 +1,3 @@
-Here’s a draft for your README file:
-
----
-
 # **End-to-End Stock Data Handling and Prediction Project**  
 
 ## **Overview**  
