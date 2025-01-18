@@ -25,11 +25,8 @@ def prepare_data(data):
     return data
 
 def load_df_to_mysql(ticker,data):
-    user = "root"
-    password = "password"
-    host = "localhost"  # or your MySQL server address
-    database = "project_stocks_db"
-    engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}/{database}")
+    from setup.config import user,password,host,DB_NAME
+    engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}/{DB_NAME}")
     data.to_sql(
         name=ticker.lower(), 
         con=engine, 

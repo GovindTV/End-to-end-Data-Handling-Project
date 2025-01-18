@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, text
+from setup.config import user,password,host,DB_NAME
 
-DB_URL = "mysql+pymysql://root:password@localhost"
-DB_NAME = "project_stocks_db"
+DB_URL = "mysql+pymysql://{user}:{password}@{host}"
 
 engine = create_engine(DB_URL, echo=True)
 

@@ -50,7 +50,7 @@ Key features include:
 ### **1. Prerequisites**  
 Ensure you have the following installed:  
 - Python 3.13.1 (tested)  
-- MySQL
+- MySQL (Remember to start the MySQL server if required)
 - ollama with llama3.2:1b
 
 ### **2. Clone the Repository**  
@@ -62,12 +62,12 @@ cd End-to-End-Data-Handling-Project
 ### **3. Install Dependencies**  
 Install the required Python packages:  
 ```bash  
-pip install -r requirements.txt  
+pip install -r setup\requirements.txt  
 ```  
 
 ### **4. Set Up MySQL Database**  
 1. Create a new MySQL database.  
-2. ~~Update the database credentials in `config.py` or `.env`.~~ Creds currently within script, will update to separate file approach.
+2. Update the database credentials in `setup\config.py` 
 3. Initialize the database schema:  
    ```bash  
    python 1.setup.py  
@@ -84,7 +84,7 @@ streamlit run 2.streamlit_app.py
 
 ## **Future Enhancements**  
 - More SQL queries
-- Store db creds safely in .env file and update the script to use it. 
+- ~~Store db creds safely in .env file and update the script to use it.~~
 - Use AI as a data transformation layer.
 - Dockerization for easier sharing.
 - Deployment of the application on a cloud platform (e.g., AWS, Azure, GCP).
