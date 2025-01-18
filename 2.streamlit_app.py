@@ -4,11 +4,12 @@ import numpy as np
 from sqlalchemy import create_engine
 from datetime import datetime, timedelta
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
-import ollama
+from sklearn.metrics import mean_squared_error, r2_score
 import xgboost as xgb
 import streamlit as st
 import matplotlib.pyplot as plt
+
+print("Remember to start MySQL in services.msc and ollama serve in any active running terminal\n"*10)
 
 def get_stock_data(ticker, start_date, end_date):
     stock_data = yf.download(ticker, start=start_date, end=end_date)
@@ -44,29 +45,39 @@ def train_model(features, target):
     model.fit(X_train, y_train)
     predictions = model.predict(X_test)
     mse = mean_squared_error(y_test, predictions)
-    return model, mse
+    r2 = r2_score(y_test, predictions)
+    accuracy = r2 * 100
+    
+    return model, mse, accuracy
+
 
 def get_stock_recommendation(ticker):
-
+    import httpx
+    import ollama
+    
+    # The Llama model used does not have the ability to access the required below data to fulfill the below requests. It is purely hallucinating.
     prompt = f"""
-            Given the stock ticker {ticker}, please provide a recommendation to buy or sell, based on the following factors:
-            1. Current stock price and performance trends.
-            2. Recent news or events impacting the company.
-            3. Financial health (e.g., earnings reports, revenue, debt levels).
-            4. Market sentiment and sector performance.
-            5. Technical analysis indicators (e.g., moving averages, RSI).
-            6. General market conditions (bullish or bearish trend).
-              
-            Consider both short-term and long-term factors in your recommendation.
-            """
-    client = ollama.Client()
-    
-    response = client.generate(
-        model="llama3.2:1b",
-        prompt=prompt
-    )
-    
-    return response
+        Given the stock ticker {ticker}, please provide a recommendation to buy or sell, based on the following factors:
+        1. Current stock price and performance trends.
+        2. Recent news or events impacting the company.
+        3. Financial health (e.g., earnings reports, revenue, debt levels).
+        4. Market sentiment and sector performance.
+        5. Technical analysis indicators (e.g., moving averages, RSI).
+        6. General market conditions (bullish or bearish trend).
+          
+        Consider both short-term and long-term factors in your recommendation.
+        """
+
+    try:
+        client = ollama.Client()
+        response = client.generate(
+            model="llama3.2:1b",
+            prompt=prompt
+        )
+        return response
+    except httpx.ConnectError as e:
+        print(f"Connection failed: {e}")
+        return "Connection error. Please ensure the server is running."
 
 st.title("Stock Price Prediction App")
 
@@ -94,9 +105,9 @@ if st.sidebar.button("Fetch Data"):
             target = processed_data['Target']
 
             with st.spinner("Training model..."):
-                model, mse = train_model(features, target)
+                model, mse, accuracy = train_model(features, target)
                 st.success("Model trained successfully!")
-                st.write(f"Model Mean Squared Error: {mse:.2f}")
+                st.write(f"Model Mean Squared Error: {mse:.2f} & Accuracy: {accuracy:.2f}")
 
             next_day_features = features.iloc[-1:].values  # Use last row for prediction
             next_day_prediction = model.predict(next_day_features)[0]
