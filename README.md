@@ -54,14 +54,14 @@ git clone https://github.com/GovindTV/End-to-End-Data-Handling-Project.git
 cd End-to-End-Data-Handling-Project  
 docker-compose up --build -d
 docker exec -it end-to-end-data-handling-project-ollama-1 ollama run llama3.2:1b  
-\bye
+/bye
 
 ```  
 ## **Future Enhancements**  
 - More SQL queries
 - ~~Store db creds safely in .env file and update the script to use it.~~
 - Use AI as a data transformation layer.
-- Dockerization for easier sharing.
+- ~~Dockerization for easier sharing.~~
 - Deployment of the application on a cloud platform (e.g., AWS, Azure, GCP).
 
 ## **Contact**  
