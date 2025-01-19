@@ -1,10 +1,15 @@
 from sqlalchemy import create_engine, text
-from setup.config import user,password,host,DB_NAME
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-
+user = os.getenv('MYSQL_USER', 'default_user')
+password = os.getenv('MYSQL_PASSWORD', 'default_password')
+host = os.getenv('MYSQL_HOST', 'localhost')
+db_name = os.getenv('MYSQL_DATABASE', 'project_stocks_db')
 ticker = "msft"
 
-engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}/{DB_NAME}")
+engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}/{db_name}")
 
 ticker = ticker.strip().lower()
 query = text(f"""

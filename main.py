@@ -1,15 +1,14 @@
 import yfinance as yf
-import pandas as pd
 import numpy as np
-from sqlalchemy import create_engine
 from datetime import datetime, timedelta
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 import xgboost as xgb
 import streamlit as st
 import matplotlib.pyplot as plt
-
-print("Remember to start MySQL in services.msc and ollama serve in any active running terminal\n"*10)
+from sqlalchemy import create_engine
+import os
+from dotenv import load_dotenv
 
 def get_stock_data(ticker, start_date, end_date):
     stock_data = yf.download(ticker, start=start_date, end=end_date)
@@ -24,15 +23,26 @@ def prepare_data(data):
     data = data.dropna()
     return data
 
-def load_df_to_mysql(ticker,data):
-    from setup.config import user,password,host,DB_NAME
-    engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}/{DB_NAME}")
+
+load_dotenv()
+
+def load_df_to_mysql(ticker, data):
+    user = os.getenv('MYSQL_USER', 'default_user')
+    password = os.getenv('MYSQL_PASSWORD', 'default_password')
+    host = os.getenv('MYSQL_HOST', 'localhost')
+    db_name = os.getenv('MYSQL_DATABASE', 'project_stocks_db')
+    
+    # Creating the MySQL engine connection string
+    engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}/{db_name}")
+    
+    # Writing data to MySQL
     data.to_sql(
         name=ticker.lower(), 
         con=engine, 
         if_exists='replace',
         index=True 
     )
+    
     print(f"SQL Load done for {ticker}")
 
 
@@ -51,6 +61,8 @@ def train_model(features, target):
 def get_stock_recommendation(ticker):
     import httpx
     import ollama
+
+    os.environ["OLLAMA_HOST"] = "http://ollama:11434"
     
     # The Llama model used does not have the ability to access the required below data to fulfill the below requests. It is purely hallucinating.
     prompt = f"""
@@ -71,7 +83,7 @@ def get_stock_recommendation(ticker):
             model="llama3.2:1b",
             prompt=prompt
         )
-        return response
+        return response['response']
     except httpx.ConnectError as e:
         print(f"Connection failed: {e}")
         return "Connection error. Please ensure the server is running."
@@ -121,6 +133,6 @@ if st.sidebar.button("Fetch Data"):
             st.pyplot(plt)
 
             recommendation = get_stock_recommendation(ticker)
-            st.write(f"AI stock recommendation: {recommendation['response']}")
+            st.write(f"AI stock recommendation: {recommendation}")
 
             load_df_to_mysql(ticker,processed_data)

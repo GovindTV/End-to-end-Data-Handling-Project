@@ -1,0 +1,48 @@
+services:
+  app:
+    build:
+      context: .  # Your application's directory
+    ports:
+      - "8501:8501"  # Exposing Streamlit app's port
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      OLLAMA_API_URL: http://ollama:11434  # Internal URL for Ollama API
+    env_file:
+      - .env  # Loading environment variables from .env file
+    depends_on:
+      - db  # Ensures db is started before the app
+      - ollama  # Ensures ollama is started before the app
+    command: streamlit run main.py  # Replace 'main.py' with the correct Streamlit entry point
+
+  db:
+    image: mysql:8.0.40
+    restart: always  # Automatically restart if the container stops
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    hostname: ${MYSQL_HOST}  # Ensures the hostname is set from the environment
+    ports:
+      - "3306:3306"  # Exposing MySQL port
+    env_file:
+      - .env  # Loading environment variables for DB configuration
+    volumes:
+      - mysql_data:/var/lib/mysql  # Persists MySQL data
+    command: ["mysqld"]  # Starts MySQL daemon
+
+  ollama:
+    image: ollama/ollama:latest  # Ollama image from Docker Hub
+    volumes:
+      - ollama:/root/.ollama  # Persists Ollama data and models
+    ports:
+      - "11434:11434"  # Exposing Ollama API port
+
+volumes:
+  mysql_data:  # Volume for MySQL data
+  ollama:  # Volume for Ollama data and models
