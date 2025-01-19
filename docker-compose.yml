@@ -16,7 +16,7 @@ services:
     depends_on:
       - db  # Ensures db is started before the app
       - ollama  # Ensures ollama is started before the app
-    command: streamlit run main.py  # Replace 'main.py' with the correct Streamlit entry point
+    command: streamlit run app.py  # Replace 'main.py' with the correct Streamlit entry point
 
   db:
     image: mysql:8.0.40
