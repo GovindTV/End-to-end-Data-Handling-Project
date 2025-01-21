@@ -60,7 +60,7 @@ Key highlights include:
 
 ### Steps
 - **First time setup**
-*Remember to do all the steps!*
+(*Remember to do all the steps!*)
 
 1. Clone the repo
 ```bash
@@ -81,13 +81,11 @@ docker exec -it end-to-end-data-handling-project-ollama-1 ollama run llama3.2:1b
 
 **Subsequent setup**
 ```bash
-# Start the server
 docker-compose up
 ```
 
 **End session**
 ```bash
-# Start the server
 docker-compose down
 ```
 
