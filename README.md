@@ -59,6 +59,7 @@ Key highlights include:
 - Ensure **Docker** and **Docker Compose** are installed on your system.
 
 ### Steps
+**First time setup**
 ```bash
 # Clone the repository
 git clone https://github.com/GovindTV/End-to-End-Data-Handling-Project.git
@@ -71,6 +72,18 @@ docker-compose up --build -d
 docker exec -it end-to-end-data-handling-project-ollama-1 ollama run llama3.2:1b
 /bye
 
+```
+
+**Subsequent setup**
+```bash
+# Start the server
+docker-compose up
+```
+
+**End session**
+```bash
+# Start the server
+docker-compose down
 ```
 
 ---
