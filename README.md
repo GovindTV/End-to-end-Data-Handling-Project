@@ -59,19 +59,24 @@ Key highlights include:
 - Ensure **Docker** and **Docker Compose** are installed on your system.
 
 ### Steps
-**First time setup**
+- **First time setup**
+*Remember to do all the steps!*
+
+1. Clone the repo
 ```bash
-# Clone the repository
 git clone https://github.com/GovindTV/End-to-End-Data-Handling-Project.git
 cd End-to-End-Data-Handling-Project
+```
 
-# Build and start the Docker containers
+2. Build the container and start the server
+```bash
 docker-compose up --build -d
+```
 
-# Download the model needed and exit from it
+3. Download the required local LLM and exit from its interface
+```bash
 docker exec -it end-to-end-data-handling-project-ollama-1 ollama run llama3.2:1b
 /bye
-
 ```
 
 **Subsequent setup**
