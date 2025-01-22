@@ -17,7 +17,7 @@ Key highlights include:
 - **Automated Data Retrieval**: Fetches historical data using **yfinance**.
 - **Database Integration**: Persists data securely in a **MySQL** database.
 - **Machine Learning Predictions**: Leverages **XGBoost** for forecasting.
-- **LLM-Powered Insights**: Provides actionable recommendations with **Ollama** and **Llama 3.2**.
+- **LLM-Powered Insights**: Provides actionable recommendations with **Ollama** and **Deepseek R1**.
 - **Dockerized Environment**: Simplifies setup, sharing, and deployment.
 
 ---
@@ -27,7 +27,7 @@ Key highlights include:
 - **Data Retrieval**: [yfinance](https://pypi.org/project/yfinance/)
 - **Database**: [MySQL](https://www.mysql.com/)
 - **Machine Learning**: [XGBoost](https://xgboost.readthedocs.io/)
-- **LLM**: [Ollama](https://ollama.com/) with [Llama 3.2 1B Model](https://ai.meta.com/blog/meta-llama-3-1/)
+- **LLM**: [Ollama](https://ollama.com/) with [Llama 3.2 1B Model](https://huggingface.co/deepseek-ai/DeepSeek-R1)
 - **Containerization**: [Docker](https://www.docker.com/)
 
 ---
@@ -75,13 +75,13 @@ docker-compose up --build -d
 
 3. Download the required local LLM and exit from its interface
 ```bash
-docker exec -it end-to-end-data-handling-project-ollama-1 ollama run llama3.2:1b
+docker exec -it end-to-end-data-handling-project-ollama-1 ollama run deepseek-r1:1.5b
 /bye
 ```
 
 **Subsequent setup**
 ```bash
-docker-compose up
+docker-compose up -d
 ```
 
 **End session**
@@ -92,9 +92,9 @@ docker-compose down
 ---
 
 ## **Future Enhancements**
-- ~~Secure database credentials using an .env file.~~
-- ~~Containerization~~
-- ~~Expand SQL query capabilities for advanced data analysis.~~
+- ~~Secure database credentials using an .env file.~~✅
+- ~~Containerization~~✅
+- ~~Expand SQL query capabilities for advanced data analysis.~~✅
 - Select SQL query from streamlit interface
 - Introduce AI-powered data transformation and preprocessing layers.
 - Deploy the application to cloud platforms (e.g., AWS, Azure, GCP).

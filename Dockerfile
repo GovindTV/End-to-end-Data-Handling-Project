@@ -2,8 +2,8 @@
 FROM python:3.13.1-slim
 
 # Set environment variables to ensure the app behaves consistently
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Set working directory in the container
 WORKDIR /app

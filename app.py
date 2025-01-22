@@ -80,7 +80,7 @@ def get_stock_recommendation(ticker):
     try:
         client = ollama.Client()
         response = client.generate(
-            model="llama3.2:1b",
+            model="deepseek-r1:1.5b",
             prompt=prompt
         )
         return response['response']
