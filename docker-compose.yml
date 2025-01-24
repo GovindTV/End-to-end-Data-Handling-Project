@@ -38,10 +38,16 @@ services:
 
   ollama:
     image: ollama/ollama:latest  # Ollama image from Docker Hub
-    volumes:
-      - ollama:/root/.ollama  # Persists Ollama data and models
     ports:
       - "11434:11434"  # Exposing Ollama API port
+    volumes:
+      - ollama:/root/.ollama  # Persists Ollama data and models
+      - ./download-model.sh:/download-model.sh
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    restart: always
+    entrypoint: ["/usr/bin/bash", "/download-model.sh"]
 
 volumes:
   mysql_data:  # Volume for MySQL data
