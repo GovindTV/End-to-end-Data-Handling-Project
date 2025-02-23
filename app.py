@@ -3,7 +3,6 @@ import numpy as np
 from datetime import datetime, timedelta
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
-import xgboost as xgb
 import streamlit as st
 import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
@@ -17,14 +16,16 @@ def get_stock_data(ticker, start_date, end_date):
     return stock_data
 
 def prepare_data(data):
+    from ta import add_all_ta_features
+
+    
+    data = add_all_ta_features(
+        data, open="Open", high="High", low="Low", close="Close", volume="Volume", fillna=True
+    )
+
     data['Target'] = data['Close'].shift(-1)
-    data['Change'] = data['Close'] - data['Open']
-    data['Volatility'] = data['High'] - data['Low']
-    data = data.dropna()
+    data = data.iloc[:-1] # Removes latest entry as we do not know its target (i.e., today's price)
     return data
-
-
-load_dotenv()
 
 def load_df_to_mysql(ticker, data):
     user = os.getenv('MYSQL_USER', 'default_user')
@@ -32,10 +33,8 @@ def load_df_to_mysql(ticker, data):
     host = os.getenv('MYSQL_HOST', 'localhost')
     db_name = os.getenv('MYSQL_DATABASE', 'project_stocks_db')
     
-    # Creating the MySQL engine connection string
     engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}/{db_name}")
     
-    # Writing data to MySQL
     data.to_sql(
         name=ticker.lower(), 
         con=engine, 
@@ -45,8 +44,8 @@ def load_df_to_mysql(ticker, data):
     
     print(f"SQL Load done for {ticker}")
 
-
-def train_model(features, target):
+def train_model(features, target):    
+    import xgboost as xgb
     X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
     model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators=100, random_state=42)
     model.fit(X_train, y_train)
@@ -57,8 +56,7 @@ def train_model(features, target):
     
     return model, mse, accuracy
 
-
-def get_stock_recommendation(ticker):
+def get_stock_recommendation(ticker, data):
     import httpx
     import ollama
 
@@ -66,7 +64,7 @@ def get_stock_recommendation(ticker):
     
     # The Llama model used does not have the ability to access the required below data to fulfill the below requests. It is purely hallucinating.
     prompt = f"""
-        Given the stock ticker {ticker}, please provide a recommendation to buy or sell, based on the following factors:
+        Given the stock ticker {ticker} and its historical data with all technical indicators {data}, please provide a recommendation to buy or sell, based on the following factors:
         1. Current stock price and performance trends.
         2. Recent news or events impacting the company.
         3. Financial health (e.g., earnings reports, revenue, debt levels).
@@ -88,12 +86,21 @@ def get_stock_recommendation(ticker):
         print(f"Connection failed: {e}")
         return "Connection error. Please ensure the server is running."
 
+load_dotenv()
 st.title("Stock Price Prediction App")
 
 st.sidebar.header("Input Parameters")
 ticker = st.sidebar.text_input("Stock Ticker", value="AAPL")
 start_date = st.sidebar.date_input("Start Date", value=datetime.now() - timedelta(days=365))
 end_date = st.sidebar.date_input("End Date", value=datetime.now())
+
+## Future update : SQL query selection option
+# option = st.sidebar.selectbox(
+#     "How would you like to be contacted?",
+#     ("Email", "Home phone", "Mobile phone"),
+#     index=None,
+#     placeholder="Select contact method...",
+# )
 
 if st.sidebar.button("Fetch Data"):
     with st.spinner("Fetching data..."):
@@ -110,7 +117,7 @@ if st.sidebar.button("Fetch Data"):
             st.write("Processed Data Preview:")
             st.dataframe(processed_data)
 
-            features = processed_data[['Open', 'High', 'Low', 'Close', 'Volume', 'Change', 'Volatility']]
+            features = processed_data[processed_data.columns[1:-1]]
             target = processed_data['Target']
 
             with st.spinner("Training model..."):
@@ -120,7 +127,7 @@ if st.sidebar.button("Fetch Data"):
 
             next_day_features = features.iloc[-1:].values  # Use last row for prediction
             next_day_prediction = model.predict(next_day_features)[0]
-            st.write(f"Predicted Price for Next Trading Day: ${next_day_prediction:.2f}")
+            st.write(f"Predicted Price for Next Trading Day: {next_day_prediction:.2f}")
 
             st.write("Historical Closing Prices")
             plt.figure(figsize=(10, 5))
@@ -131,8 +138,10 @@ if st.sidebar.button("Fetch Data"):
             plt.ylabel("Price")
             plt.legend()
             st.pyplot(plt)
+                    
+            with st.spinner("Getting recommendation from Deepseek R1..."):
+                recommendation = get_stock_recommendation(ticker, processed_data)
+                st.write(f"AI stock recommendation: {recommendation}")
 
-            recommendation = get_stock_recommendation(ticker)
-            st.write(f"AI stock recommendation: {recommendation}")
-
-            load_df_to_mysql(ticker,processed_data)
+            with st.spinner("Loading data to MySQL db"):
+                load_df_to_mysql(ticker,stock_data)

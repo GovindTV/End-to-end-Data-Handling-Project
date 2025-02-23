@@ -1,9 +1,9 @@
 services:
   app:
     build:
-      context: .  # Your application's directory
+      context: .
     ports:
-      - "8501:8501"  # Exposing Streamlit app's port
+      - "8501:8501"
     environment:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -14,34 +14,33 @@ services:
     env_file:
       - .env  # Loading environment variables from .env file
     depends_on:
-      - db  # Ensures db is started before the app
-      - ollama  # Ensures ollama is started before the app
-    command: streamlit run app.py  # Replace 'main.py' with the correct Streamlit entry point
+      - db
+      - ollama
+    command: streamlit run app.py
 
   db:
     image: mysql:8.0.40
-    restart: always  # Automatically restart if the container stops
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    hostname: ${MYSQL_HOST}  # Ensures the hostname is set from the environment
+    hostname: ${MYSQL_HOST}
     ports:
-      - "3306:3306"  # Exposing MySQL port
+      - "3306:3306"
     env_file:
-      - .env  # Loading environment variables for DB configuration
+      - .env 
     volumes:
-      - mysql_data:/var/lib/mysql  # Persists MySQL data
-    command: ["mysqld"]  # Starts MySQL daemon
+      - mysql_data:/var/lib/mysql
 
   ollama:
-    image: ollama/ollama:latest  # Ollama image from Docker Hub
+    image: ollama/ollama:latest
     ports:
-      - "11434:11434"  # Exposing Ollama API port
+      - "11434:11434"
     volumes:
-      - ollama:/root/.ollama  # Persists Ollama data and models
+      - ollama:/root/.ollama
       - ./download-model.sh:/download-model.sh
     container_name: ollama
     pull_policy: always
@@ -50,5 +49,5 @@ services:
     entrypoint: ["/usr/bin/bash", "/download-model.sh"]
 
 volumes:
-  mysql_data:  # Volume for MySQL data
-  ollama:  # Volume for Ollama data and models
+  mysql_data:
+  ollama:

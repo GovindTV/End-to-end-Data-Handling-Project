@@ -59,8 +59,7 @@ Key highlights include:
 - Ensure **Docker** and **Docker Compose** are installed on your system.
 
 ### Steps
-- **First time setup**
-(*Remember to do all the steps!*)
+0. If you are running MySQL on port 3306 in local, then stop that service first and start docker.
 
 1. Clone the repo
 ```bash
@@ -85,8 +84,10 @@ docker-compose down
 - ~~Secure database credentials using an .env file.~~ ✅
 - ~~Containerization~~ ✅
 - ~~Expand SQL query capabilities for advanced data analysis.~~ ✅
-- Select SQL query from streamlit interface
+- Select SQL query from streamlit interface.
+- Give LLM complete data other than just the ticker.
 - Introduce AI-powered data transformation and preprocessing layers.
+- Use a better Algorithm for price prediction.
 - Deploy the application to cloud platforms (e.g., AWS, Azure, GCP).
 
 ---

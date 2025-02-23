@@ -7,7 +7,7 @@ user = os.getenv('MYSQL_USER', 'default_user')
 password = os.getenv('MYSQL_PASSWORD', 'default_password')
 host = os.getenv('MYSQL_HOST', 'localhost')
 db_name = os.getenv('MYSQL_DATABASE', 'project_stocks_db')
-ticker = "msft"
+ticker = "aapl"
 
 engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}/{db_name}")
 
@@ -120,6 +120,7 @@ volume_profile_query = text(f"""
     WHERE Date >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)
     ORDER BY Date DESC
 """)
+
 with engine.connect() as connection:
     result = connection.execute(query)
     for row in result:
